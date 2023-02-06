@@ -1,38 +1,84 @@
-.App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
+.app {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  align-items: center;
+}
+
+.header {
+  background-color: aquamarine;
+  height: 4rem;
+  font-size: 2rem;
+  font-weight: 600;
+  color: black;
+  display: flex;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
+  align-items: center;
+}
+
+.app__body {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.graph__form{
+  width: 30rem;
+  height: 20rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.graph__form label {
+  display: block;
+  cursor: pointer;
+  width: 100%;
+  height: 5rem;
+  border-radius: 10px;
+  background-color: aquamarine;
+  color: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.graph__form label div{
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+}
+
+.graph__form label input {
+  display: none;
+}
+
+.graph__form button {
+  cursor: pointer;
+  border: none;
+  background-color: black;
   color: white;
+  padding: 1.4rem 2.8rem;
+  border-radius: 10px;
+  font-size: 1.2rem;
+  align-self: center;
 }
 
-.App-link {
-  color: #61dafb;
+.graph__form label .uploaded {
+  display: block;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.graph__form label .uploaded-text{
+  color: red;
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  z-index: 99;
 }
+
+.graph__form label .uploaded-icon {
+  cursor: pointer !important;
+}
+
