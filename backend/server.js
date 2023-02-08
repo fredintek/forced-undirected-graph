@@ -43,7 +43,6 @@ app.post("/undirected-graph", upload.fields([ {name: "properties", maxCount: 1},
                 
             })
         })
-        console.log(edges)
         const edgesCopy = JSON.parse(JSON.stringify(edges));
         const nodes = {}
         edgesCopy.forEach(item => {
@@ -54,7 +53,6 @@ app.post("/undirected-graph", upload.fields([ {name: "properties", maxCount: 1},
         for (const val of Object.entries(nodes)){
             nodeArr.push(val[1])
         }
-        console.log(nodeArr)
         fs.unlinkSync(adjmatrix[0].path)
         return res.status(200).json({
             message: "ok",
