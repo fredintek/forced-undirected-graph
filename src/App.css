@@ -45,6 +45,10 @@
   flex-direction: column;
 }
 
+.graph__form label.fileover {
+  background-color: rgb(58, 116, 94);
+}
+
 .graph__form label div{
   display: flex;
   align-items: baseline;

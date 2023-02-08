@@ -3,23 +3,22 @@ import { faUpload, faClose } from '@fortawesome/free-solid-svg-icons'
 import './App.css';
 import { useRef, useState } from 'react';
 import axios from 'axios';
-import VisGraph, {
-  GraphData,
-  GraphEvents,
-  Options,
-} from 'react-vis-graph-wrapper';
+import VisGraph from 'react-vis-graph-wrapper';
 
 function App() {
 
   // states and ref for app
   const [ nodeData, setNodeData ] = useState(null);
   const [ linkData, setLinkData ] = useState(null);
-  const [propertiesFile, setPropertiesFile] = useState("");
-  const [adjFile, setAdjFile] = useState("");
+  const [propertiesFile, setPropertiesFile] = useState(null);
+  const [adjFile, setAdjFile] = useState(null);
   const adjFileRef = useRef();
   const propertiesFileRef = useRef();
   const [showGraph, setShowGraph] = useState(false);
+  const [fileOverProp, setFileOverProp] = useState(false);
+  const [fileOverAdj, setFileOverAdj] = useState(false);
 
+  // Function handlers
   const handleSubmit = async (e) => {
     e.preventDefault()
 
@@ -43,17 +42,55 @@ function App() {
     setShowGraph(true)
   }
 
-  function removeUploadedFile(type) {
+  const handleDragOver = (e, type) => {
+    e.preventDefault();
+    
     if (type === "prop"){
-      propertiesFileRef.current.value = "";
-      setPropertiesFile("");
+      setFileOverProp(true)
+      
     }else if (type === "adj"){
-      adjFileRef.current.value = "";
-      setAdjFile("")
+      setFileOverAdj(true)
+
     }
   }
 
+  const handleDragLeave = (e, type) => {
+    e.preventDefault();
+    
+    if (type === "prop"){
+      setFileOverProp(false)
+      
+    }else if (type === "adj"){
+      setFileOverAdj(false)
 
+    }
+  }
+
+  const handleDragDrop = (e, type) => {
+    e.preventDefault();
+    
+    if (type === "prop"){
+      setPropertiesFile(e.dataTransfer.files[0])
+      
+    }else if (type === "adj"){
+      setAdjFile(e.dataTransfer.files[0])
+
+    }
+  }
+
+  function removeUploadedFile(type) {
+    if (type === "prop"){
+      propertiesFileRef.current.value = "";
+      setPropertiesFile(null);
+      setFileOverProp(false)
+    }else if (type === "adj"){
+      adjFileRef.current.value = "";
+      setAdjFile(null)
+      setFileOverAdj(false)
+    }
+  }
+
+  // forced undirected graph configurations
   const graph = {
     nodes: nodeData,
     edges: linkData,
@@ -76,8 +113,6 @@ function App() {
     },
   };
 
-
-
   return (
     <div className="app">
       <header className="header">
@@ -88,7 +123,7 @@ function App() {
           showGraph ? (<></>) : (
           <form className="graph__form" onSubmit={handleSubmit} encType="multipart/form-data">
             <div className="form__group">
-              <label htmlFor="properties">
+              <label className={`${fileOverProp || propertiesFile ? "fileover": ""}`} htmlFor="properties" onDragOver={(e) => handleDragOver(e, "prop")} onDragLeave={(e) => handleDragLeave(e, "prop")} onDrop={(e) => handleDragDrop(e, "prop")}>
                 <div>
                 <FontAwesomeIcon icon={faUpload} />
                 <p>Properties File</p>
@@ -100,11 +135,11 @@ function App() {
                     </div>
                     )
                   }
-                <input ref={propertiesFileRef} onChange={(e) => setPropertiesFile(e.target.files[0])} type="file" name="properties" id="properties" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" />
+                <input ref={propertiesFileRef}  onChange={(e) => setPropertiesFile(e.target.files[0])} type="file" name="properties" id="properties" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" />
               </label>
             </div>
             <div className="form__group">
-              <label htmlFor="adjmatrix">
+              <label htmlFor="adjmatrix" className={`${fileOverAdj || adjFile ? "fileover": ""}`} onDragOver={(e) => handleDragOver(e, "adj")} onDragLeave={(e) => handleDragLeave(e, "adj")} onDrop={(e) => handleDragDrop(e, "adj")}>
                 <div>
                   <FontAwesomeIcon icon={faUpload} />
                   <p>Adjacency Matrix</p>
@@ -128,9 +163,9 @@ function App() {
       {
         showGraph && (
         <VisGraph
-      graph={graph}
-      options={options}
-      events={events}
+          graph={graph}
+          options={options}
+          events={events}
     />
 
 
